@@ -2,34 +2,47 @@
 
 ## 📝 Descrição
 
-Bem-vindo ao projeto de **Sistema de Notificações de Pedidos**! 🎉 Este é um sistema em construção que gerencia pedidos de clientes e envia notificações quando os estados dos pedidos são atualizados. O sistema é dividido em dois microserviços principais:
+Bem-vindo ao projeto de **Sistema de Notificações de Pedidos**! 🎉 Este sistema gerencia pedidos de clientes e envia notificações quando os estados dos pedidos são atualizados. O projeto é dividido em três APIs principais:
 
-- **PedidoService**: Gerencia a criação e o estado dos pedidos. 📦
-- **NotificationService**: Envia notificações (e-mail, SMS, etc.) quando o estado do pedido é alterado. 📧📲
+1. **PedidoAPI**: Gerencia a criação e o estado dos pedidos. 📦
+2. **NotificacaoAPI**: Envia e gerencia notificações relacionadas aos pedidos. 📧📲
+3. **EventosAPI**: Processa e publica eventos de mudança de estado dos pedidos. 📢
 
 Utilizamos **Entity Framework** para o acesso a dados e **Hangfire** para gerenciar tarefas assíncronas.
 
-## 🚀 Funcionalidades
-
-- **Criar Pedido**: Permite criar pedidos através da API do PedidoService. ✍️
-- **Atualizar Estado do Pedido**: Atualiza o estado do pedido e envia um evento para o NotificationService. 🔄
-- **Enviar Notificação**: O NotificationService envia uma notificação ao cliente quando o estado do pedido muda. 📬
-
 ## 🏗️ Estrutura do Projeto
 
-### PedidoService
+### **1. PedidoAPI**
 
-- **PedidoController**: Endpoint para criar e atualizar pedidos. 🛠️
-- **PedidoRepository**: Armazena pedidos (em memória ou SQLite). 🗃️
-- **PedidoFactory**: Usa o padrão Factory para criar instâncias de pedidos. 🏭
-- **EventPublisher**: Publica eventos de mudança de estado dos pedidos para o NotificationService. 📢
+**Responsável pelo gerenciamento de pedidos.**
 
-### NotificationService
+- **Pedido**: Representa um pedido com um identificador e status.
+- **PedidoService**: Gerencia a criação e atualização de pedidos.
+- **PedidoRepository**: Armazena e recupera pedidos.
+- **PedidoFactory**: Cria instâncias de pedidos.
+- **StatusPedido**: Enumeração para os possíveis estados dos pedidos.
 
-- **NotificationProcessor**: Processa eventos e agenda notificações. ⏲️
-- **NotificationRepository**: Armazena notificações pendentes (em memória ou SQLite). 📑
-- **NotificationSender**: Envia notificações (e-mail/SMS) usando Hangfire para gerenciamento assíncrono. 📤
-- **NotificationFactory**: Usa o padrão Factory para criar diferentes tipos de notificações (e-mail, SMS). 🏷️
+### **2. NotificacaoAPI**
+
+**Responsável pelo envio e gerenciamento de notificações.**
+
+- **Notificacao**: Representa uma notificação com um identificador, tipo e conteúdo.
+- **EnviadorDeNotificacao**: Envia notificações.
+- **NotificacaoRepository**: Armazena e recupera notificações pendentes.
+- **NotificacaoFactory**: Cria instâncias de notificações.
+- **TipoNotificacao**: Enumeração para os tipos de notificações (e-mail, SMS).
+
+### **3. EventosAPI**
+
+**Responsável por processar e publicar eventos relacionados ao pedido.**
+
+- **PublicadorDeEventos**: Publica eventos de mudança de estado dos pedidos.
+- **EventoMudancaStatusPedido**: Representa um evento de mudança de status de pedido.
+- **ProcessadorDeNotificacao**: Processa eventos e aciona o envio de notificações.
+
+## 📡 Eventos e Comunicação
+
+Os eventos são utilizados para a comunicação entre os microserviços. Quando um pedido é criado ou seu estado é atualizado, um evento é publicado e processado pelo **EventosAPI**, que então aciona o **NotificacaoAPI** para enviar notificações ao cliente.
 
 ## 🛠️ Tecnologias e Padrões
 
